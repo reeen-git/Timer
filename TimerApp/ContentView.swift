@@ -25,7 +25,7 @@ struct ContentView: View {
                 Image(systemName: timerManager.timerMode == .running ? "pause.circle.fill" : "play.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 180, height: 180)
+                    .frame(width: 130, height: 130)
                     .foregroundColor(.red)
                     .onTapGesture(perform: {
                         if self.timerManager.timerMode == .initial {
@@ -33,27 +33,38 @@ struct ContentView: View {
                         }
                         self.timerManager.timerMode == .running ? self.timerManager.pause() : self.timerManager.start()
                     })
+                
+                Spacer()
+                
                 if timerManager.timerMode == .paused {
                     Image(systemName: "gobackward")
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 50, height: 50)
+                        .frame(width: 100)
                         .padding(.top, 40)
-                    .onTapGesture(perform: {
-                        self.timerManager.reset()
-                    })
+                        .onTapGesture(perform: {
+                            self.timerManager.reset()
+                        })
                 }
                 if timerManager.timerMode == .initial {
-                    Picker(selection: $selectedPickerIndex, label: Text("")) {
-                        ForEach(0 ..< availableMinutes.count) {
-                            Text("\(self.availableMinutes[$0]) min")
-                        }
+                    ZStack {
+                        Image(systemName: "rectangle.fill")
+                            .foregroundColor(.white)
+                            
+                        Picker(selection: $selectedPickerIndex, label: Text("時間を選択"), content: {
+                            ForEach(0 ..< availableMinutes.count) {
+                                Text("\(self.availableMinutes[$0]) min")
+                                    .font(.largeTitle)
+                            }
+                            
+                        })
                     }
-                    .labelsHidden()
+                    .frame(width: 100)
                 }
                 Spacer()
             }
             .navigationBarTitle("Timer")
         }
+        .font(.system(size: 50))
         .environment(\.colorScheme, .dark)
     }
 }
